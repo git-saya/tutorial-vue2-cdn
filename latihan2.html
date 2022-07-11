@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue Beginners.</title>
+	<link href="https://fonts.googleapis.com/css2?family=Arimo&display=swap" rel="stylesheet">
+	<style>
+		body {
+			margin: 5%;
+			font-family: 'Arimo', sans-serif;
+		}
+
+		.active {
+			background: salmon;
+			border: 0;
+			padding: 5px
+		}
+	</style>
+</head>
+<body>
+
+<div id="app">
+	<header-component nama="Vuejs" gambar="image/vuejs.jpg"></header-component>
+
+	<nav>
+		<router-link to="/">Home</router-link>
+    <router-link to="/about">About</router-link>
+    <router-link to="/kelas">Kelas</router-link>
+	</nav>
+
+	<main>
+		<!-- <kelas v-bind:items="kelas" v-on:submitkelas="submitkelas" v-on:hapuskelas="hapuskelas"></kelas> -->
+		<!-- <home></home> -->
+		<router-view v-bind:items="kelas" v-on:submitkelas="submitkelas" v-on:hapuskelas="hapuskelas"></router-view>
+	</main>
+
+	<footer-component>
+		<p>copyright 2020 - kelas.baledemy</p>	
+	</footer-component>
+</div>
+
+<!-- development version, includes helpful console warnings -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script>
+	const Home = {
+		template: '<div>Home</div>'
+	}
+
+	const About = {
+		template: '<div>About</div>'
+	}
+
+	const Kelas = {
+		props: ['items'],
+		template: `
+			<div>
+				<h3>Tambah Kelas.</h3>
+				<p><input type="text" placeholder="Nama Kelas" v-on:keyup.enter="$emit('submitkelas', $event)"></p>
+
+				<hr>
+				<h3>Daftar Kelas ({{ items.length }})</h3>
+				<template v-if="items.length">
+					<ul>
+						<li v-for="(item, index) of items">{{ index+1 }} - {{ item }}
+							<a href="" v-on:click.prevent="$emit('hapuskelas', index)">hapus</a>
+						</li>
+					</ul>
+				</template>
+				
+				<li v-else>Kelas belum tersedia.,</li>
+			</div>
+		`,
+		data: function() {
+			return {
+			}
+		},
+		methods: {}
+	}
+
+	Vue.component('header-component', {
+		props: ['nama', 'gambar'],
+		template: `
+				<header>
+					<img :src="gambar" width="300">
+					<p>{{ 'Hello, ' +nama }}</p>
+				</header>
+		`,
+		data: function() {
+			return {
+				pesan: 'Hello, Component!'
+			}
+		}
+	})
+
+	Vue.component('footer-component', {
+		template: `
+			<footer id="footer">
+				<slot></slot>
+			</footer>
+		`
+	})
+
+	const routes = [
+	  { path: '/', component: Home },
+	  { path: '/about', component: About },
+	  { path: '/kelas', component: Kelas}
+	]
+
+	const router = new VueRouter({
+		mode: 'history',
+	  routes
+	})
+
+	const vm = new Vue({
+		el: '#app',
+		router,
+		components: {
+			'home': Home
+		},
+		data: {
+			// string, number, boolean, array, object
+			kelas: ['Golang', 'PHP']
+		},
+		methods: {
+			hapuskelas: function(index) {
+				this.kelas.splice(index, 1)
+			},
+			submitkelas: function(event) {
+				const text = event.target.value
+				this.kelas.unshift(text)
+			}
+		},
+		computed: {
+		}
+	})
+</script>
+</body>
+</html>

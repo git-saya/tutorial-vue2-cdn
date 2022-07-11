@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue Beginners.</title>
+	<link href="https://fonts.googleapis.com/css2?family=Arimo&display=swap" rel="stylesheet">
+	<style>
+		body {
+			margin: 5%;
+			font-family: 'Arimo', sans-serif;
+		}
+
+		.active {
+			background: salmon;
+			border: 0;
+			padding: 5px
+		}
+	</style>
+</head>
+<body>
+
+<div id="app">
+	<header>
+		<img src="image/logo.png" width="80">
+		<h1 v-text="name"></h1>
+
+		<h3>Form Submit.</h3>
+		<p><input type="text" placeholder="Nama Kelas" v-on:keyup.enter="submit" v-model="kelasbaru"></p>
+
+		<h3>Daftar Kelas ({{ kelas.length }})</h3>
+
+		<template v-if="kelas.length > 1">
+			<ul>
+				<li v-for="(item, index) of kelas">{{ index+1 }} - {{ item }}</li>
+			</ul>
+		</template>
+		
+		<li v-else>Kelas belum tersedia.,</li>
+
+		<h3>Perulangan (1-5) </h3>
+		<ul>
+			<li v-for="x in 5">{{ x }}</li>
+		</ul>
+
+		<h3>Mencari Bilangan Genap: {{ numbers }} </h3>
+		<ul>
+			<li v-for="x in caribilangangenap(numbers)">{{ x }}</li>
+		</ul>
+
+		<p>{{ kelas }}</p>
+		<div>
+			<label><input type="checkbox" value="React" v-model="kelas"> React</label>	
+			<label><input type="checkbox" value="Vuejs" v-model="kelas"> Vuejs</label>	
+			<label><input type="checkbox" value="Angular" v-model="kelas"> Angular</label>	
+		</div>
+
+		<p>
+			<button @click="handleclick">Ditekan</button>
+		</p>
+		<img :src="gambar" width="500">
+		<p>The Progressive
+	JavaScript Framework</p>
+
+		<a v-bind:class="{active: menu === 'home'}" href="#" v-on:click.prevent="gantimenu('home')">Home</a>
+		<a v-bind:class="{active: menu === 'about'}" href="#" v-on:click.prevent="gantimenu('about')">About</a>
+		<a v-bind:class="{active: menu === 'blog'}" href="#" v-on:click.prevent="gantimenu('blog')">Blog</a>
+	
+	</header>
+
+	<footer id="footer">
+		<p>copyright 2020</p>	
+	</footer>
+</div>
+
+<!-- development version, includes helpful console warnings -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script> -->
+<script>
+	const vm = new Vue({
+		el: '#app',
+		data: {
+			// string, number, boolean, array, object
+			name: 'Doremi Fasilasido',
+			message: "Hello Word!",
+			qty: 3,
+			namaDepan: 'Ekky',
+			namaBelakang: ' Ridyanto',
+			bilangan: 1,
+			link: '<a href="">kelas.baledemy</a>',
+			gambar: 'image/vuejs.jpg',
+			menu: 'home',
+			kelas: ['Golang', 'PHP'],
+			kelasbaru: "",
+			numbers: [1, 2, 3, 4, 5]
+		},
+		methods: {
+			getname: function() {
+				return 'Hello, ' +this.name
+			},
+			ubahNama: function(namaBaru) {
+				this.name = namaBaru
+				return this.getname()
+			},
+			handleclick: function() {
+				this.bilangan++
+				this.gambar = 'image/react.jpg'
+			},
+			caribilangangenap: function(data) {
+				return data.filter(angka => {
+					return angka % 2 == 0
+				})
+			},
+			gantimenu: function(data) {
+				this.menu = data
+			},
+			submit: function() {
+				this.kelas.unshift(this.kelasbaru)
+				this.kelasbaru = ""
+			}
+		},
+		computed: {
+			totalBayar: function() {
+				return this.qty * 10000
+			},
+			namaLengkap: function() {
+				return this.namaDepan + this.namaBelakang
+			},
+			infoBilangan: function() {
+				return this.bilangan%2 === 0 ? 'Genap' : 'Ganjil'
+			}
+		}
+	})
+</script>
+</body>
+</html>
